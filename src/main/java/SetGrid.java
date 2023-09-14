@@ -1,11 +1,11 @@
-import java.util.HashSet;
-import java.util.Map;
-import java.util.List;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
-import java.util.Random;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SetGrid extends Grid {
 
@@ -38,14 +38,16 @@ public class SetGrid extends Grid {
 
     private HashSet<Point> field;
 
-
     public SetGrid(int _width, int _height, double prob) {
         super(_width, _height);
         Random r = new Random();
-        field = Stream
-            .generate(() -> { return new Point (r.nextInt(width), r.nextInt(height)); })
-            .limit((int) ((double) width * (double) height * prob))
-            .collect(Collectors.toCollection(HashSet::new));
+        field =
+                Stream.generate(
+                                () -> {
+                                    return new Point(r.nextInt(width), r.nextInt(height));
+                                })
+                        .limit((int) ((double) width * (double) height * prob))
+                        .collect(Collectors.toCollection(HashSet::new));
     }
 
     @Override
@@ -56,44 +58,50 @@ public class SetGrid extends Grid {
     @Override
     public void set_elem(int i, int j, CellState val) {
         switch (val) {
-        case ALIVE:
-            field.add(new Point(i, j));
-            break;
-        case DEAD:
-            field.remove(new Point(i, j));
-            break;
+            case ALIVE:
+                field.add(new Point(i, j));
+                break;
+            case DEAD:
+                field.remove(new Point(i, j));
+                break;
         }
     }
 
-    private Stream<Point> moore_neighborhood (int i, int j) {
+    private Stream<Point> moore_neighborhood(int i, int j) {
         List<Integer> offsets = Arrays.asList(-1, 0, 1);
-        Stream<Point> product = offsets.stream().flatMap(a ->
-                                               offsets.stream().flatMap(b ->
-                                                                        Stream.of(new Point(a, b))));
+        Stream<Point> product =
+                offsets.stream()
+                        .flatMap(a -> offsets.stream().flatMap(b -> Stream.of(new Point(a, b))));
         Stream<Point> filtered = product.filter(a -> !(a.x == 0 && a.y == 0));
 
         return filtered.map(a -> new Point(a.x + i, a.y + j));
-
     }
 
     @Override
     public void run_gol_step() {
-        Stream<Point> valuable_points = this.field
-            .stream()
-            .flatMap(a -> moore_neighborhood(a.x, a.y))
-            .filter(a -> !(a.x < 0 || a.y < 0 ||
-                           a.x >= this.width  ||
-                           a.y >= this.height));
+        Stream<Point> valuable_points =
+                this.field.stream()
+                        .flatMap(a -> moore_neighborhood(a.x, a.y))
+                        .filter(
+                                a ->
+                                        !(a.x < 0
+                                                || a.y < 0
+                                                || a.x >= this.width
+                                                || a.y >= this.height));
 
-        Map<Point, Long> frequencies = valuable_points
-            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<Point, Long> frequencies =
+                valuable_points.collect(
+                        Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         Stream<Point> new_field_stream =
-            frequencies.entrySet().stream()
-            .filter(a -> 3 == a.getValue()
-                    || (2 == a.getValue() &&
-                        this.get_elem(a.getKey().x, a.getKey().y) == CellState.ALIVE))
-            .map(Map.Entry::getKey);
+                frequencies.entrySet().stream()
+                        .filter(
+                                a ->
+                                        3 == a.getValue()
+                                                || (2 == a.getValue()
+                                                        && this.get_elem(a.getKey().x, a.getKey().y)
+                                                                == CellState.ALIVE))
+                        .map(Map.Entry::getKey);
 
         this.field = new_field_stream.collect(Collectors.toCollection(HashSet::new));
     }

@@ -8,7 +8,8 @@ public abstract class Grid {
     }
 
     abstract CellState get_elem(int i, int j);
+
     abstract void set_elem(int i, int j, CellState val);
+
     abstract void run_gol_step();
 }
-

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class VectorGrid extends Grid {
     private ArrayList<CellState> field;
@@ -9,10 +9,13 @@ public class VectorGrid extends Grid {
     public VectorGrid(int _width, int _height, double prob) {
         super(_width, _height);
         Random r = new Random();
-        field = Stream
-            .generate(() -> { return r.nextDouble() > prob ? CellState.DEAD : CellState.ALIVE; })
-            .limit(width * height)
-            .collect(Collectors.toCollection(ArrayList::new));
+        field =
+                Stream.generate(
+                                () -> {
+                                    return r.nextDouble() > prob ? CellState.DEAD : CellState.ALIVE;
+                                })
+                        .limit(width * height)
+                        .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -31,10 +34,8 @@ public class VectorGrid extends Grid {
             for (int j = -1; j <= 1; ++j) {
                 int nx = x + i;
                 int ny = y + j;
-                if (!((i == 0 && j == 0)
-                      || nx < 0 || ny < 0
-                      || nx >= width || ny >= height)
-                    && get_elem(nx, ny) == CellState.ALIVE) {
+                if (!((i == 0 && j == 0) || nx < 0 || ny < 0 || nx >= width || ny >= height)
+                        && get_elem(nx, ny) == CellState.ALIVE) {
                     count++;
                 }
             }

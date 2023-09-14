@@ -19,7 +19,12 @@ public class Main {
             ClearBackground(BLACK);
             for (int i = 0; i < box_width; ++i) {
                 for (int j = 0; j < box_height; ++j) {
-                    DrawRectangle(BOX_DIMENSION * i, BOX_DIMENSION * j, BOX_DIMENSION-1, BOX_DIMENSION-1, g.get_elem(i, j) == CellState.ALIVE ? WHITE : BLACK);
+                    DrawRectangle(
+                            BOX_DIMENSION * i,
+                            BOX_DIMENSION * j,
+                            BOX_DIMENSION - 1,
+                            BOX_DIMENSION - 1,
+                            g.get_elem(i, j) == CellState.ALIVE ? WHITE : BLACK);
                 }
             }
 

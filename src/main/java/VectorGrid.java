@@ -30,12 +30,10 @@ public class VectorGrid extends Grid {
 
     private int calculate_neighbors(int x, int y) {
         int count = 0;
-        for (int i = -1; i <= 1; ++i) {
-            for (int j = -1; j <= 1; ++j) {
-                int nx = x + i;
-                int ny = y + j;
-                if (!((i == 0 && j == 0) || nx < 0 || ny < 0 || nx >= width || ny >= height)
-                        && get_elem(nx, ny) == CellState.ALIVE) {
+        for (int i = x - 1; i <= x + 1; ++i) {
+            for (int j = y - 1; j <= y + 1; ++j) {
+                if (!((i == x && j == y) || i < 0 || j < 0 || i >= width || j >= height)
+                        && get_elem(i, j) == CellState.ALIVE) {
                     count++;
                 }
             }

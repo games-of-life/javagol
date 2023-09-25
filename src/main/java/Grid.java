@@ -1,15 +1,15 @@
 public abstract class Grid {
-    protected int width;
-    protected int height;
+  protected int width;
+  protected int height;
 
-    public Grid(int _width, int _height) {
-        width = _width;
-        height = _height;
-    }
+  public Grid(int _width, int _height) {
+    this.width = _width;
+    this.height = _height;
+  }
 
-    abstract CellState get_elem(int i, int j);
+  abstract CellState get_elem(int i, int j);
 
-    abstract void set_elem(int i, int j, CellState val);
+  abstract void set_elem(int i, int j, CellState val);
 
-    abstract void run_gol_step();
+  abstract void run_gol_step();
 }

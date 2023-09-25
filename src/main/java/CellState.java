@@ -1,4 +1,4 @@
 public enum CellState {
-    DEAD,
-    ALIVE
+  DEAD,
+  ALIVE
 }
